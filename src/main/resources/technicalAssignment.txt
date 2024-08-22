@@ -1,0 +1,44 @@
+User CRUD API and search
+
+# User fields:
+-last name
+-first name
+-middle name
+-username
+-password
+-department
+-roles
+-address
+
+# Department fields:
+-name (uz,ru,en);
+-order
+-parent department
+
+# Role fields:
+-name(uz,ru,en)
+-order
+
+# Address fields:
+-address
+-region
+
+# Region fields:
+-name(uz,ru,en)
+-district
+
+# District fields:
+-name: (uz,ru,en);
+-order
+
+!!!!!!!Qidiruv uchun JPA specification dan foydalanilsin
+#User search by:
+-first name
+-last name
+-middle name
+-username
+-department -> parent department (qidiruv user department hamda user department parent bo’yicha, bunda department id orqali qidirish. Agar foydalanuvchi user department tanlasa department bo’yicha yoki department parent tanlasa shu departmentning boshqa bolalari dagi userlar ham olib kelinishi kerak)
+-role (role name bo’yicha uz, ru, en)
+-address (address ni so’z bilan kiritish yoki region tanlash yoki regiondagi district tanlash orqali qidirish)
+
+Hamda user create, update, delete apilar yaratilishi kerak!!
