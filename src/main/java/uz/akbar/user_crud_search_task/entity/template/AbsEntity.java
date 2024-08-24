@@ -17,5 +17,6 @@ public abstract class AbsEntity {
     private UUID id;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
+
 }

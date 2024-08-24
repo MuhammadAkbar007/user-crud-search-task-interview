@@ -1,0 +1,38 @@
+### Region is independent entity (Each District should be assigned to One Region).
+### So create this first
+### Validation Fields: nameUz, nameEng, nameRu -> all unique
+### /api/v1/region
+
+### Create
+### Return -> success ? savedObject : "String message"
+POST http://localhost:8080/api/v1/region
+Content-Type: application/json
+
+{
+  "nameUz": "Farg'ona viloyati",
+  "nameEng": "Fergana region",
+  "nameRu": "Ферганская область"
+}
+
+### Read All
+### Return -> json object(s) in []
+GET http://localhost:8080/api/v1/region
+
+### Read One
+### Return -> success ? object : "String message"
+GET http://localhost:8080/api/v1/region/fb058d29-d5e6-4e18-9455-49d3cd920853
+
+### Update
+### Return -> success ? editedObject : "String message"
+PUT http://localhost:8080/api/v1/region/2f5ad0f5-8624-4d74-ae33-1729f1e9a684
+Content-Type: application/json
+
+{
+  "nameUz": "Andijon viloyati",
+  "nameEng": "Andijan region",
+  "nameRu": "Андижанская область"
+}
+
+### Delete
+### Return String message
+DELETE http://localhost:8080/api/v1/region/fb058d29-d5e6-4e18-9455-49d3cd920853
