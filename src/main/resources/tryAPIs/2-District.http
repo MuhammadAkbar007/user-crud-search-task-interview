@@ -1,0 +1,38 @@
+### Create
+### Validation Fields: nameUz, nameEng, nameRu, unique -> all unique
+### Return -> success ? {savedObject} : "String message"
+POST http://localhost:8080/api/v1/district
+Content-Type: application/json
+
+{
+  "nameUz": "Chortoq tumani",
+  "nameEng": "Chortok district",
+  "nameRu": "Чартакский район",
+  "order": 2,
+  "regionId": "cdf9c7db-3029-4e3a-b040-fdbac0bdfc2b"
+}
+
+### Read All
+### Return -> success ? [{object(s)}] : "String message"
+GET http://localhost:8080/api/v1/district
+
+### Read One
+### Return -> success ? {object} : "String message"
+GET http://localhost:8080/api/v1/district/6db4a2e0-ac2c-4e6a-97a0-7628a7df6b11
+
+### Update
+### Return -> success ? {editedObject} : "String message"
+PUT http://localhost:8080/api/v1/district/74f912f0-73ce-4f23-b3c9-76e09029aede
+Content-Type: application/json
+
+{
+"nameUz": "Uchqo'rg'on tumani",
+  "nameEng": "Uchkurgan district",
+  "nameRu": "Учкурганский район",
+  "order": 3,
+  "regionId": "cdf9c7db-3029-4e3a-b040-fdbac0bdfc2b"
+}
+
+### Delete
+### Return -> success ? <Empty> : "String message"
+DELETE http://localhost:8080/api/v1/district/74f912f0-73ce-4f23-b3c9-76e09029aede

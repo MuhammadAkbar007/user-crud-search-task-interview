@@ -18,13 +18,13 @@ public class DataInitializer {
             if (regionRepository.count() == 0) {
                 /* Create default data for Region */
                 Region region = new Region();
-                region.setName(new LocalizedString("Namangan viloyati", "Namangan region", "Наманганская область"));
+//                region.setName(new LocalizedString("Namangan viloyati", "Namangan region", "Наманганская область"));
                 regionRepository.save(region);
 
                 /* Create default data for Region */
                 District district = new District();
                 district.setOrder(1);
-                district.setName(new LocalizedString("Uychi tumani", "Uychi district", "Уйчинский район"));
+//                district.setName(new LocalizedString("Uychi tumani", "Uychi district", "Уйчинский район"));
                 district.setRegion(region);
                 districtRepository.save(district);
             }

@@ -1,6 +1,7 @@
 package uz.akbar.user_crud_search_task.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import uz.akbar.user_crud_search_task.entity.template.AbsNameOrder;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class District extends AbsNameOrder {
 

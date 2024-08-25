@@ -26,7 +26,7 @@ public class RegionController {
     @GetMapping
     public ResponseEntity<?> readAll() {
         ApiResponse response = service.getAll();
-        return ResponseEntity.ok(response.object());
+        return ResponseEntity.status(response.success() ? 200 : 400).body(response.object());
     }
 
     @GetMapping("/{id}")
@@ -37,8 +37,10 @@ public class RegionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable UUID id, @Valid @RequestBody RegionDto dto) {
-        ApiResponse response = service.update(id, dto);
-        return ResponseEntity.status(response.success() ? 200 : response.object().equals("Region not found") ? 404 : 400).body(response.object());
+        ApiResponse response = service.edit(id, dto);
+        return ResponseEntity
+                .status(response.success() ? 200 : response.object().equals("Region not found") ? 404 : 400)
+                .body(response.object());
     }
 
     @DeleteMapping("/{id}")

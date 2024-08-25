@@ -8,10 +8,9 @@ import uz.akbar.user_crud_search_task.entity.template.LocalizedString;
 import uz.akbar.user_crud_search_task.payload.ApiResponse;
 import uz.akbar.user_crud_search_task.payload.RegionDto;
 import uz.akbar.user_crud_search_task.repository.RegionRepository;
-import uz.akbar.user_crud_search_task.repository.specification.RegionSpecifications;
+import uz.akbar.user_crud_search_task.repository.specifications.RegionSpecifications;
 import uz.akbar.user_crud_search_task.service.RegionService;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +27,6 @@ public class RegionServiceImpl implements RegionService {
 
         Region region = new Region();
         region.setName(new LocalizedString(dto.nameUz(), dto.nameEng(), dto.nameRu()));
-        region.setCreatedAt(LocalDateTime.now());
 
         try {
             Region saved = repository.save(region);
@@ -41,31 +39,37 @@ public class RegionServiceImpl implements RegionService {
     /* Read all */
     @Override
     public ApiResponse getAll() {
-        return new ApiResponse(true, repository.findAll());
+        try {
+            return new ApiResponse(true, repository.findAll());
+        } catch (Exception e) {
+            return new ApiResponse(false, e.getMessage());
+        }
     }
 
     /* Read one by id */
     @Override
     public ApiResponse getById(UUID id) {
         Optional<Region> optional = repository.findById(id);
-        return optional.map(region -> new ApiResponse(true, region)).orElseGet(() -> new ApiResponse(false, "Region not found"));
+        return optional.map(region -> new ApiResponse(true, region))
+                .orElseGet(() -> new ApiResponse(false, "Region not found"));
     }
 
     /* Update */
     @Override
-    public ApiResponse update(UUID id, RegionDto dto) {
+    public ApiResponse edit(UUID id, RegionDto dto) {
         if (existsByAnyName(dto.nameUz(), dto.nameEng(), dto.nameRu()))
             return new ApiResponse(false, "This name already exists");
 
         Optional<Region> optional = repository.findById(id);
-        if (optional.isEmpty()) return new ApiResponse(false, "Region not found");
+        if (optional.isEmpty())
+            return new ApiResponse(false, "Region not found");
         Region region = optional.get();
         region.setName(new LocalizedString(dto.nameUz(), dto.nameEng(), dto.nameRu()));
         Region saved = repository.save(region);
         return new ApiResponse(true, saved);
     }
 
-    /* Update */
+    /* Delete */
     @Override
     public ApiResponse delete(UUID id) {
         try {

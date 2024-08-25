@@ -14,7 +14,7 @@ public interface RegionService {
 
     ApiResponse getById(UUID id);
 
-    ApiResponse update(UUID id, RegionDto dto);
+    ApiResponse edit(UUID id, RegionDto dto);
 
     ApiResponse delete(UUID id);
 }

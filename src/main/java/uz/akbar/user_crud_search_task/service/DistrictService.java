@@ -1,22 +1,20 @@
 package uz.akbar.user_crud_search_task.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import uz.akbar.user_crud_search_task.entity.District;
+import jakarta.validation.Valid;
 import uz.akbar.user_crud_search_task.payload.ApiResponse;
 import uz.akbar.user_crud_search_task.payload.DistrictDto;
-import uz.akbar.user_crud_search_task.repository.DistrictRepository;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Service
-public class DistrictService {
+public interface DistrictService {
 
-    @Autowired
-    DistrictRepository repository;
+    ApiResponse add(DistrictDto dto);
 
-    public ApiResponse add(DistrictDto dto) {
-        District district = new District();
-        return null;
-    }
+    ApiResponse getAll();
+
+    ApiResponse getById(UUID id);
+
+    ApiResponse edit(UUID id, DistrictDto dto);
+
+    ApiResponse delete(UUID id);
 }
