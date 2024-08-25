@@ -17,72 +17,76 @@ import java.util.UUID;
 @Service
 public class RegionServiceImpl implements RegionService {
 
-    @Autowired
-    RegionRepository repository;
+	@Autowired
+	RegionRepository repository;
 
-    /* Create */
-    public ApiResponse add(RegionDto dto) {
-        if (existsByAnyName(dto.nameUz(), dto.nameEng(), dto.nameRu()))
-            return new ApiResponse(false, "This name already exists");
+	/* Create */
+	public ApiResponse add(RegionDto dto) {
+		if (existsByAnyName(dto.nameUz(), dto.nameEng(), dto.nameRu()))
+			return new ApiResponse(false, "This name already exists");
 
-        Region region = new Region();
-        region.setName(new LocalizedString(dto.nameUz(), dto.nameEng(), dto.nameRu()));
+		Region region = new Region();
+		region.setName(new LocalizedString(dto.nameUz(), dto.nameEng(), dto.nameRu()));
 
-        try {
-            Region saved = repository.save(region);
-            return new ApiResponse(true, saved);
-        } catch (Exception e) {
-            return new ApiResponse(false, e.getMessage());
-        }
-    }
+		try {
+			Region saved = repository.save(region);
+			return new ApiResponse(true, saved);
+		} catch (Exception e) {
+			return new ApiResponse(false, e.getMessage());
+		}
+	}
 
-    /* Read all */
-    @Override
-    public ApiResponse getAll() {
-        try {
-            return new ApiResponse(true, repository.findAll());
-        } catch (Exception e) {
-            return new ApiResponse(false, e.getMessage());
-        }
-    }
+	/* Read all */
+	@Override
+	public ApiResponse getAll() {
+		try {
+			return new ApiResponse(true, repository.findAll());
+		} catch (Exception e) {
+			return new ApiResponse(false, e.getMessage());
+		}
+	}
 
-    /* Read one by id */
-    @Override
-    public ApiResponse getById(UUID id) {
-        Optional<Region> optional = repository.findById(id);
-        return optional.map(region -> new ApiResponse(true, region))
-                .orElseGet(() -> new ApiResponse(false, "Region not found"));
-    }
+	/* Read one by id */
+	@Override
+	public ApiResponse getById(UUID id) {
+		Optional<Region> optional = repository.findById(id);
+		return optional.map(region -> new ApiResponse(true, region))
+				.orElseGet(() -> new ApiResponse(false, "Region not found"));
+	}
 
-    /* Update */
-    @Override
-    public ApiResponse edit(UUID id, RegionDto dto) {
-        if (existsByAnyName(dto.nameUz(), dto.nameEng(), dto.nameRu()))
-            return new ApiResponse(false, "This name already exists");
+	/* Update */
+	@Override
+	public ApiResponse edit(UUID id, RegionDto dto) {
+		if (existsByAnyName(dto.nameUz(), dto.nameEng(), dto.nameRu()))
+			return new ApiResponse(false, "This name already exists");
 
-        Optional<Region> optional = repository.findById(id);
-        if (optional.isEmpty())
-            return new ApiResponse(false, "Region not found");
-        Region region = optional.get();
-        region.setName(new LocalizedString(dto.nameUz(), dto.nameEng(), dto.nameRu()));
-        Region saved = repository.save(region);
-        return new ApiResponse(true, saved);
-    }
+		Optional<Region> optional = repository.findById(id);
+		if (optional.isEmpty())
+			return new ApiResponse(false, "Region not found");
+		Region region = optional.get();
+		region.setName(new LocalizedString(dto.nameUz(), dto.nameEng(), dto.nameRu()));
+		try {
+			Region saved = repository.save(region);
+			return new ApiResponse(true, saved);
+		} catch (Exception e) {
+			return new ApiResponse(false, e.getMessage());
+		}
+	}
 
-    /* Delete */
-    @Override
-    public ApiResponse delete(UUID id) {
-        try {
-            repository.deleteById(id);
-            return new ApiResponse(true, "Region deleted successfully");
-        } catch (Exception e) {
-            return new ApiResponse(false, e.getMessage());
-        }
-    }
+	/* Delete */
+	@Override
+	public ApiResponse delete(UUID id) {
+		try {
+			repository.deleteById(id);
+			return new ApiResponse(true, "Region deleted successfully");
+		} catch (Exception e) {
+			return new ApiResponse(false, e.getMessage());
+		}
+	}
 
-    // Checker function if any name exists in database
-    private boolean existsByAnyName(String nameUz, String nameEng, String nameRu) {
-        Specification<Region> exist = RegionSpecifications.hasAnyName(nameUz, nameEng, nameRu);
-        return repository.exists(exist);
-    }
+	// Checker function if any name exists in database
+	private boolean existsByAnyName(String nameUz, String nameEng, String nameRu) {
+		Specification<Region> exist = RegionSpecifications.hasAnyName(nameUz, nameEng, nameRu);
+		return repository.exists(exist);
+	}
 }
