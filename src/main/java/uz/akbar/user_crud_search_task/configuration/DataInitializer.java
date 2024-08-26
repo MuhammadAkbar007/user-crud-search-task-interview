@@ -3,15 +3,11 @@ package uz.akbar.user_crud_search_task.configuration;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uz.akbar.user_crud_search_task.entity.Address;
-import uz.akbar.user_crud_search_task.entity.District;
-import uz.akbar.user_crud_search_task.entity.Region;
-import uz.akbar.user_crud_search_task.entity.Role;
+import uz.akbar.user_crud_search_task.entity.*;
 import uz.akbar.user_crud_search_task.entity.template.LocalizedString;
-import uz.akbar.user_crud_search_task.repository.AddressRepository;
-import uz.akbar.user_crud_search_task.repository.DistrictRepository;
-import uz.akbar.user_crud_search_task.repository.RegionRepository;
-import uz.akbar.user_crud_search_task.repository.RoleRepository;
+import uz.akbar.user_crud_search_task.repository.*;
+
+import java.util.List;
 
 @Configuration
 public class DataInitializer {
@@ -21,7 +17,8 @@ public class DataInitializer {
             RegionRepository regionRepository,
             DistrictRepository districtRepository,
             AddressRepository addressRepository,
-            RoleRepository roleRepository
+            RoleRepository roleRepository,
+            DepartmentRepository departmentRepository
     ) {
         return args -> {
             if (regionRepository.count() == 0) {
@@ -48,6 +45,17 @@ public class DataInitializer {
                 role.setOrder(1);
                 role.setName(new LocalizedString("Dasturchi", "Programmist", "Программист"));
                 roleRepository.save(role);
+
+                /* Create default data for Role */
+                Department department = new Department();
+                department.setOrder(1);
+                department.setName(
+                        new LocalizedString("" +
+                                "Axborot Texnologiyalari",
+                                "Information Technologies",
+                                "Информационные Технологии"
+                        ));
+                departmentRepository.save(department);
             }
         };
     }

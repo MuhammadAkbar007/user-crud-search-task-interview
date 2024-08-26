@@ -52,8 +52,9 @@ public class AddressServiceImpl implements AddressService {
     /* Read one by id */
     @Override
     public ApiResponse getById(UUID id) {
-        Optional<Address> optional = repository.findById(id);
-        return optional.map(address -> new ApiResponse(true, address)).orElseGet(() -> new ApiResponse(false, "Address not found"));
+        return repository.findById(id)
+                .map(address -> new ApiResponse(true, address))
+                .orElseGet(() -> new ApiResponse(false, "Address not found"));
     }
 
     /* Update */
