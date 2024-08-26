@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.akbar.user_crud_search_task.entity.template.AbsNameOrder;
-import uz.akbar.user_crud_search_task.entity.template.LocalizedString;
 
 import java.util.List;
 
@@ -32,5 +31,7 @@ public class Department extends AbsNameOrder {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+
+    @JsonIgnore
     private List<User> users;
 }

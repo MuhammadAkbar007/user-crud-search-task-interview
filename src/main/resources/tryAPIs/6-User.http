@@ -1,0 +1,43 @@
+### Create
+### Return -> success ? {savedObject} : "String message"
+POST http://localhost:8080/api/v1/user
+Content-Type: application/json
+
+{
+  "firstName": "Ahmadjon",
+  "lastName": "Behzodov",
+  "middleName": "Jamshid o'g'li",
+  "username": "ahmad3366",
+  "password": "qwerty3366",
+  "addressId": "30feff38-32e9-4002-bfe1-59c4e1125c8a",
+  "departmentId": "50588251-b7d3-4243-9ea6-c5093666345b",
+  "roleIds": ["333c4b09-ad80-4aa5-bdb9-9e7be6ceae83"]
+}
+
+### Read All
+### Return -> success ? [{object(s)}] : "String message"
+GET http://localhost:8080/api/v1/user
+
+### Read One
+### Return -> success ? {object} : "String message"
+GET http://localhost:8080/api/v1/user/514c8047-5d45-480a-8f55-297b9bb98684
+
+### Update
+### Return -> success ? {editedObject} : "String message"
+PUT http://localhost:8080/api/v1/user/514c8047-5d45-480a-8f55-297b9bb98684
+Content-Type: application/json
+
+{
+  "firstName": "Anvarjon",
+  "lastName": "Anvarov",
+  "middleName": "Anvar o'g'li",
+  "username": "anvar4488",
+  "password": "qwerty4488",
+  "addressId": "7d10437f-ff5a-4c45-811c-2e287652acd4",
+  "departmentId": "50588251-b7d3-4243-9ea6-c5093666345b",
+  "roleIds": ["333c4b09-ad80-4aa5-bdb9-9e7be6ceae83"]
+}
+
+### Delete
+### Return -> Success ? <Empty> : String message
+DELETE http://localhost:8080/api/v1/user/514c8047-5d45-480a-8f55-297b9bb98684

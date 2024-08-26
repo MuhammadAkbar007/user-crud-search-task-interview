@@ -1,12 +1,19 @@
 package uz.akbar.user_crud_search_task.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import uz.akbar.user_crud_search_task.repository.UserRepository;
+import uz.akbar.user_crud_search_task.payload.ApiResponse;
+import uz.akbar.user_crud_search_task.payload.UserDto;
 
-@Service
-public class UserService {
+import java.util.UUID;
 
-    @Autowired
-    UserRepository repository;
+public interface UserService {
+
+    ApiResponse add(UserDto dto);
+
+    ApiResponse getAll();
+
+    ApiResponse getById(UUID id);
+
+    ApiResponse edit(UUID id, UserDto dto);
+
+    ApiResponse delete(UUID id);
 }

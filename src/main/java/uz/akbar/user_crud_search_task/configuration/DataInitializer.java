@@ -1,16 +1,20 @@
 package uz.akbar.user_crud_search_task.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import uz.akbar.user_crud_search_task.entity.*;
 import uz.akbar.user_crud_search_task.entity.template.LocalizedString;
 import uz.akbar.user_crud_search_task.repository.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Configuration
 public class DataInitializer {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner runner(
@@ -18,8 +22,8 @@ public class DataInitializer {
             DistrictRepository districtRepository,
             AddressRepository addressRepository,
             RoleRepository roleRepository,
-            DepartmentRepository departmentRepository
-    ) {
+            DepartmentRepository departmentRepository,
+            UserRepository userRepository) {
         return args -> {
             if (regionRepository.count() == 0) {
                 /* Create default data for Region */
@@ -50,12 +54,24 @@ public class DataInitializer {
                 Department department = new Department();
                 department.setOrder(1);
                 department.setName(
-                        new LocalizedString("" +
+                        new LocalizedString(
                                 "Axborot Texnologiyalari",
                                 "Information Technologies",
                                 "Информационные Технологии"
                         ));
                 departmentRepository.save(department);
+
+                /* Create default data for User */
+                User user = new User();
+                user.setFirstName("Abdulloh");
+                user.setLastName("Abdullayev");
+                user.setMiddleName("Abdulla o'g'li");
+                user.setUsername("abdulloh2255");
+                user.setPassword(passwordEncoder.encode("qwerty123"));
+                user.setAddress(address);
+                user.setDepartment(department);
+                user.setRoles(Set.of(role));
+                userRepository.save(user);
             }
         };
     }
