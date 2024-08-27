@@ -42,3 +42,9 @@ Content-Type: application/json
 ### Delete
 ### Return -> Success ? <Empty> : String message
 DELETE http://localhost:8080/api/v1/user/514c8047-5d45-480a-8f55-297b9bb98684
+
+### Search firstName
+GET http://localhost:8080/api/v1/user/search?firstName=Ahmadjon
+
+### Search lastName
+GET http://localhost:8080/api/v1/user/search?lastName=Behzodov
