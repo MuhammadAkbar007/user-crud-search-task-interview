@@ -1,6 +1,5 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.akbar.user_crud_search_task.entity.Role;
 import uz.akbar.user_crud_search_task.entity.template.LocalizedString;
@@ -16,8 +15,12 @@ import java.util.UUID;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
+    final
     RoleRepository repository;
+
+    public RoleServiceImpl(RoleRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public ApiResponse add(RoleDto dto) {

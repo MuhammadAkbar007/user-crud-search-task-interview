@@ -1,6 +1,5 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.akbar.user_crud_search_task.entity.Department;
 import uz.akbar.user_crud_search_task.entity.template.LocalizedString;
@@ -16,8 +15,11 @@ import java.util.UUID;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
-    @Autowired
-    DepartmentRepository repository;
+    final DepartmentRepository repository;
+
+    public DepartmentServiceImpl(DepartmentRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public ApiResponse add(DepartmentDto dto) {

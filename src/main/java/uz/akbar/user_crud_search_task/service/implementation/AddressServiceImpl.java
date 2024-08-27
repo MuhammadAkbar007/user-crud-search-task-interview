@@ -1,6 +1,5 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uz.akbar.user_crud_search_task.entity.Address;
 import uz.akbar.user_crud_search_task.entity.Region;
@@ -16,11 +15,14 @@ import java.util.UUID;
 @Service
 public class AddressServiceImpl implements AddressService {
 
-    @Autowired
-    AddressRepository repository;
+    final AddressRepository repository;
 
-    @Autowired
-    RegionRepository regionRepository;
+    final RegionRepository regionRepository;
+
+    public AddressServiceImpl(AddressRepository repository, RegionRepository regionRepository) {
+        this.repository = repository;
+        this.regionRepository = regionRepository;
+    }
 
     /* Create */
     @Override

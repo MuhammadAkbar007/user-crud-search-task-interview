@@ -1,6 +1,5 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import uz.akbar.user_crud_search_task.entity.Region;
@@ -17,8 +16,11 @@ import java.util.UUID;
 @Service
 public class RegionServiceImpl implements RegionService {
 
-	@Autowired
-	RegionRepository repository;
+	final RegionRepository repository;
+
+	public RegionServiceImpl(RegionRepository repository) {
+		this.repository = repository;
+	}
 
 	/* Create */
 	public ApiResponse add(RegionDto dto) {

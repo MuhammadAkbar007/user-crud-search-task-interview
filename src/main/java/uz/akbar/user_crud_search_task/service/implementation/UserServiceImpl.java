@@ -1,6 +1,5 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.akbar.user_crud_search_task.entity.Address;
@@ -8,7 +7,9 @@ import uz.akbar.user_crud_search_task.entity.Department;
 import uz.akbar.user_crud_search_task.entity.Role;
 import uz.akbar.user_crud_search_task.entity.User;
 import uz.akbar.user_crud_search_task.payload.ApiResponse;
+import uz.akbar.user_crud_search_task.payload.UserDependenciesDto;
 import uz.akbar.user_crud_search_task.payload.UserDto;
+import uz.akbar.user_crud_search_task.payload.UserSavingDto;
 import uz.akbar.user_crud_search_task.repository.AddressRepository;
 import uz.akbar.user_crud_search_task.repository.DepartmentRepository;
 import uz.akbar.user_crud_search_task.repository.RoleRepository;
@@ -21,54 +22,44 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    UserRepository repository;
+    final UserRepository repository;
 
-    @Autowired
-    AddressRepository addressRepository;
+    final AddressRepository addressRepository;
 
-    @Autowired
-    DepartmentRepository departmentRepository;
+    final DepartmentRepository departmentRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+    final RoleRepository roleRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository repository, AddressRepository addressRepository, DepartmentRepository departmentRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.addressRepository = addressRepository;
+        this.departmentRepository = departmentRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public ApiResponse add(UserDto dto) {
-        ApiResponse responseFromChecker = checkUsername(dto.username());
-        if (!responseFromChecker.success()) return responseFromChecker;
+        ApiResponse responseFromValidation = validateDependencies(dto);
+        if (!responseFromValidation.success()) return responseFromValidation;
 
-        Optional<Address> optionalAddress = addressRepository.findById(dto.addressId());
-        if (optionalAddress.isEmpty()) return new ApiResponse(false, "Address not found");
+        UserDependenciesDto dependenciesDto = (UserDependenciesDto) responseFromValidation.object();
 
-        Optional<Department> optionalDepartment = departmentRepository.findById(dto.departmentId());
-        if (optionalDepartment.isEmpty()) return new ApiResponse(false, "Department not found");
+        UserSavingDto userSavingDto = new UserSavingDto(
+                new User(),
+                dto.firstName(),
+                dto.lastName(),
+                dto.middleName(),
+                dto.username(),
+                passwordEncoder.encode(dto.password()),
+                dependenciesDto.address(),
+                dependenciesDto.department(),
+                dependenciesDto.roles()
+        );
 
-        Set<Role> roles = getRoles(dto.roleIds());
-        if (roles.isEmpty()) return new ApiResponse(false, "Roles not found");
-
-        if (repository.exists(UserSpecifications.isAddressAssigned(dto.addressId())))
-            return new ApiResponse(false, "Address is already assigned");
-
-        User user = new User();
-        user.setFirstName(dto.firstName());
-        user.setLastName(dto.lastName());
-        user.setMiddleName(dto.middleName());
-        user.setUsername(dto.username());
-        user.setPassword(passwordEncoder.encode(dto.password()));
-        user.setAddress(optionalAddress.get());
-        user.setDepartment(optionalDepartment.get());
-        user.setRoles(roles);
-
-        try {
-            User saved = repository.save(user);
-            return new ApiResponse(true, saved);
-        } catch (Exception e) {
-            return new ApiResponse(false, e.getMessage());
-        }
+        return prepareAndSaveUser(userSavingDto);
     }
 
     @Override
@@ -92,37 +83,24 @@ public class UserServiceImpl implements UserService {
         Optional<User> optional = repository.findById(id);
         if (optional.isEmpty()) return new ApiResponse(false, "User not found");
 
-        ApiResponse responseFromChecker = checkUsername(dto.username());
-        if (!responseFromChecker.success()) return responseFromChecker;
+        ApiResponse responseFromValidation = validateDependencies(dto);
+        if (!responseFromValidation.success()) return responseFromValidation;
 
-        Optional<Address> optionalAddress = addressRepository.findById(dto.addressId());
-        if (optionalAddress.isEmpty()) return new ApiResponse(false, "Address not found");
+        UserDependenciesDto dependenciesDto = (UserDependenciesDto) responseFromValidation.object();
 
-        Optional<Department> optionalDepartment = departmentRepository.findById(dto.departmentId());
-        if (optionalDepartment.isEmpty()) return new ApiResponse(false, "Department not found");
+        UserSavingDto userSavingDto = new UserSavingDto(
+                optional.get(),
+                dto.firstName(),
+                dto.lastName(),
+                dto.middleName(),
+                dto.username(),
+                passwordEncoder.encode(dto.password()),
+                dependenciesDto.address(),
+                dependenciesDto.department(),
+                dependenciesDto.roles()
+        );
 
-        Set<Role> roles = getRoles(dto.roleIds());
-        if (roles.isEmpty()) return new ApiResponse(false, "Roles not found");
-
-        if (repository.exists(UserSpecifications.isAddressAssignedToOtherUser(dto.addressId(), id)))
-            return new ApiResponse(false, "Address is assigned to other user");
-
-        User user = optional.get();
-        user.setFirstName(dto.firstName());
-        user.setLastName(dto.lastName());
-        user.setMiddleName(dto.middleName());
-        user.setUsername(dto.username());
-        user.setPassword(passwordEncoder.encode(dto.password()));
-        user.setRoles(roles);
-        user.setAddress(optionalAddress.get());
-        user.setDepartment(optionalDepartment.get());
-
-        try {
-            User saved = repository.save(user);
-            return new ApiResponse(true, saved);
-        } catch (Exception e) {
-            return new ApiResponse(false, e.getMessage());
-        }
+        return prepareAndSaveUser(userSavingDto);
     }
 
     @Override
@@ -148,5 +126,49 @@ public class UserServiceImpl implements UserService {
             optional.ifPresent(roles::add);
         }
         return roles;
+    }
+
+    private ApiResponse validateDependencies(UserDto dto) {
+        ApiResponse responseFromChecker = checkUsername(dto.username());
+        if (!responseFromChecker.success()) return responseFromChecker;
+
+        Optional<Address> optionalAddress = addressRepository.findById(dto.addressId());
+        if (optionalAddress.isEmpty()) return new ApiResponse(false, "Address not found");
+
+        Optional<Department> optionalDepartment = departmentRepository.findById(dto.departmentId());
+        if (optionalDepartment.isEmpty()) return new ApiResponse(false, "Department not found");
+
+        Set<Role> roles = getRoles(dto.roleIds());
+        if (roles.isEmpty()) return new ApiResponse(false, "Roles not found");
+
+        if (repository.exists(UserSpecifications.isAddressAssigned(dto.addressId())))
+            return new ApiResponse(false, "Address is already assigned");
+
+        UserDependenciesDto dependenciesDto = new UserDependenciesDto(
+                optionalAddress.get(),
+                optionalDepartment.get(),
+                roles
+        );
+
+        return new ApiResponse(true, dependenciesDto);
+    }
+
+    private ApiResponse prepareAndSaveUser(UserSavingDto dto) {
+        User user = dto.user();
+        user.setFirstName(dto.firstName());
+        user.setLastName(dto.lastName());
+        user.setMiddleName(dto.middleName());
+        user.setUsername(dto.username());
+        user.setPassword(dto.password());
+        user.setAddress(dto.address());
+        user.setDepartment(dto.department());
+        user.setRoles(dto.roles());
+
+        try {
+            User saved = repository.save(user);
+            return new ApiResponse(true, saved);
+        } catch (Exception e) {
+            return new ApiResponse(false, e.getMessage());
+        }
     }
 }
