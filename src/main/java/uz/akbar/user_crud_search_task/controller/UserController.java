@@ -26,8 +26,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        ApiResponse response = service.getAll();
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+            ) {
+        ApiResponse response = service.getAll(page, size);
         return ResponseEntity.status(response.success() ? 200 : 400).body(response.object());
     }
 

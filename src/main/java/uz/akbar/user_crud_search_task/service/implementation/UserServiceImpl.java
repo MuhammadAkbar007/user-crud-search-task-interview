@@ -1,5 +1,9 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.akbar.user_crud_search_task.entity.Address;
@@ -63,9 +67,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse getAll() {
+    public ApiResponse getAll(int page, int size) {
         try {
-            return new ApiResponse(true, repository.findAll());
+            return new ApiResponse(true, repository.findAll(PageRequest.of(page - 1, size)));
         } catch (Exception e) {
             return new ApiResponse(false, e.getMessage());
         }

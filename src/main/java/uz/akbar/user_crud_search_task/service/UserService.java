@@ -9,7 +9,7 @@ public interface UserService {
 
     ApiResponse add(UserDto dto);
 
-    ApiResponse getAll();
+    ApiResponse getAll(int page, int size);
 
     ApiResponse getById(UUID id);
 
