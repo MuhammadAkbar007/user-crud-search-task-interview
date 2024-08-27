@@ -37,8 +37,13 @@ User CRUD API and search
 -last name
 -middle name
 -username
--department -> parent department (qidiruv user department hamda user department parent bo’yicha, bunda department id orqali qidirish. Agar foydalanuvchi user department tanlasa department bo’yicha yoki department parent tanlasa shu departmentning boshqa bolalari dagi userlar ham olib kelinishi kerak)
+
+-department -> parent department (qidiruv user department hamda user department parent bo’yicha,
+bunda department id orqali qidirish. Agar foydalanuvchi user department tanlasa department bo’yicha yoki
+department parent tanlasa shu departmentning boshqa bolalaridagi userlar ham olib kelinishi kerak)
+
 -role (role name bo’yicha uz, ru, en)
+
 -address (address ni so’z bilan kiritish yoki region tanlash yoki regiondagi district tanlash orqali qidirish)
 
 Hamda user create, update, delete apilar yaratilishi kerak!!

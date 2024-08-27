@@ -1,7 +1,6 @@
 package uz.akbar.user_crud_search_task.service.implementation;
 
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +48,9 @@ public class UserServiceImpl implements UserService {
         ApiResponse responseFromValidation = validateDependencies(dto);
         if (!responseFromValidation.success()) return responseFromValidation;
 
+        if (repository.exists(UserSpecifications.isAddressAssigned(dto.addressId())))
+            return new ApiResponse(false, "Address is already assigned");
+
         UserDependenciesDto dependenciesDto = (UserDependenciesDto) responseFromValidation.object();
 
         UserSavingDto userSavingDto = new UserSavingDto(
@@ -87,13 +89,19 @@ public class UserServiceImpl implements UserService {
         Optional<User> optional = repository.findById(id);
         if (optional.isEmpty()) return new ApiResponse(false, "User not found");
 
+        User user = optional.get();
+
+        if (repository.exists(UserSpecifications.isAddressAssignedToOtherUser(dto.addressId(), user.getId()))) {
+            return new ApiResponse(false, "Address is already assigned");
+        }
+
         ApiResponse responseFromValidation = validateDependencies(dto);
         if (!responseFromValidation.success()) return responseFromValidation;
 
         UserDependenciesDto dependenciesDto = (UserDependenciesDto) responseFromValidation.object();
 
         UserSavingDto userSavingDto = new UserSavingDto(
-                optional.get(),
+                user,
                 dto.firstName(),
                 dto.lastName(),
                 dto.middleName(),
@@ -112,6 +120,42 @@ public class UserServiceImpl implements UserService {
         try {
             repository.deleteById(id);
             return new ApiResponse(true, "User deleted successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse search(
+            String firstName, String lastName, String middleName, String username, Set<String> roleNames,
+            String address, UUID regionId, UUID districtId, UUID departmentId, UUID parenDepartmentId
+    ) {
+
+        try {
+            Specification<User> spec = Specification.where(null);
+
+            if (firstName != null) spec = spec.and(UserSpecifications.hasFirstName(firstName));
+
+            if (lastName != null) spec = spec.and(UserSpecifications.hasLastName(lastName));
+
+            if (middleName != null) spec = spec.and(UserSpecifications.hasMiddleName(middleName));
+
+            if (username != null) spec = spec.and(UserSpecifications.hasUsername(username));
+
+            if (roleNames != null && !roleNames.isEmpty()) spec = spec.and(UserSpecifications.hasRole(roleNames));
+
+            if (address != null) spec = spec.and(UserSpecifications.hasAddressContaining(address));
+
+            if (regionId != null) spec = spec.and(UserSpecifications.hasRegion(regionId));
+
+            if (districtId != null) spec = spec.and(UserSpecifications.hasDistrict(districtId));
+
+            if (departmentId != null) spec = spec.and(UserSpecifications.belongsToDepartment(departmentId));
+
+            if (parenDepartmentId != null)
+                spec = spec.and(UserSpecifications.belongsToParentDepartment(parenDepartmentId));
+
+            return new ApiResponse(true, repository.findAll(spec));
         } catch (Exception e) {
             return new ApiResponse(false, e.getMessage());
         }
@@ -145,8 +189,6 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = getRoles(dto.roleIds());
         if (roles.isEmpty()) return new ApiResponse(false, "Roles not found");
 
-        if (repository.exists(UserSpecifications.isAddressAssigned(dto.addressId())))
-            return new ApiResponse(false, "Address is already assigned");
 
         UserDependenciesDto dependenciesDto = new UserDependenciesDto(
                 optionalAddress.get(),
