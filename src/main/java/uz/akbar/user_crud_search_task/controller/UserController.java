@@ -1,7 +1,6 @@
 package uz.akbar.user_crud_search_task.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.akbar.user_crud_search_task.payload.ApiResponse;
@@ -14,8 +13,11 @@ import java.util.UUID;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-    @Autowired
-    UserService service;
+    final UserService service;
+
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid UserDto dto) {
