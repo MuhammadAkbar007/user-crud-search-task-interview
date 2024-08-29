@@ -35,6 +35,7 @@ public class RoleServiceImpl implements RoleService {
             Role saved = repository.save(role);
             return new ApiResponse(true, saved);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -44,6 +45,7 @@ public class RoleServiceImpl implements RoleService {
         try {
             return new ApiResponse(true, repository.findAll());
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -68,6 +70,7 @@ public class RoleServiceImpl implements RoleService {
             Role saved = repository.save(role);
             return new ApiResponse(true, saved);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -78,6 +81,7 @@ public class RoleServiceImpl implements RoleService {
             repository.deleteById(id);
             return new ApiResponse(true, "Role deleted successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }

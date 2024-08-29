@@ -34,6 +34,7 @@ public class RegionServiceImpl implements RegionService {
 			Region saved = repository.save(region);
 			return new ApiResponse(true, saved);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ApiResponse(false, e.getMessage());
 		}
 	}
@@ -44,6 +45,7 @@ public class RegionServiceImpl implements RegionService {
 		try {
 			return new ApiResponse(true, repository.findAll());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ApiResponse(false, e.getMessage());
 		}
 	}
@@ -71,6 +73,7 @@ public class RegionServiceImpl implements RegionService {
 			Region saved = repository.save(region);
 			return new ApiResponse(true, saved);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ApiResponse(false, e.getMessage());
 		}
 	}
@@ -82,6 +85,7 @@ public class RegionServiceImpl implements RegionService {
 			repository.deleteById(id);
 			return new ApiResponse(true, "Region deleted successfully");
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ApiResponse(false, e.getMessage());
 		}
 	}

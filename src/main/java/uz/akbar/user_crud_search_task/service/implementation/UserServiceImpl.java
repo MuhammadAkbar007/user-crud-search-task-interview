@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
         try {
             return new ApiResponse(true, repository.findAll(PageRequest.of(page - 1, size)));
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -121,6 +122,7 @@ public class UserServiceImpl implements UserService {
             repository.deleteById(id);
             return new ApiResponse(true, "User deleted successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -157,6 +159,7 @@ public class UserServiceImpl implements UserService {
 
             return new ApiResponse(true, repository.findAll(spec));
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -214,6 +217,7 @@ public class UserServiceImpl implements UserService {
             User saved = repository.save(user);
             return new ApiResponse(true, saved);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }

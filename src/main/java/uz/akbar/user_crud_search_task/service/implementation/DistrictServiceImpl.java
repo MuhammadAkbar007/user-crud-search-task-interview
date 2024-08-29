@@ -45,6 +45,7 @@ public class DistrictServiceImpl implements DistrictService {
             District saved = repository.save(district);
             return new ApiResponse(true, saved);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -55,6 +56,7 @@ public class DistrictServiceImpl implements DistrictService {
         try {
             return new ApiResponse(true, repository.findAll());
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -90,6 +92,7 @@ public class DistrictServiceImpl implements DistrictService {
             repository.save(district);
             return new ApiResponse(true, district);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -101,6 +104,7 @@ public class DistrictServiceImpl implements DistrictService {
             repository.deleteById(id);
             return new ApiResponse(true, "District deleted successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }

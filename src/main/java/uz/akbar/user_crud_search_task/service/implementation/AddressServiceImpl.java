@@ -37,6 +37,7 @@ public class AddressServiceImpl implements AddressService {
             Address saved = repository.save(address);
             return new ApiResponse(true, saved);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -47,6 +48,7 @@ public class AddressServiceImpl implements AddressService {
         try {
             return new ApiResponse(true, repository.findAll());
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -75,6 +77,7 @@ public class AddressServiceImpl implements AddressService {
             Address saved = repository.save(address);
             return new ApiResponse(true, saved);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
@@ -86,6 +89,7 @@ public class AddressServiceImpl implements AddressService {
             repository.deleteById(id);
             return new ApiResponse(true, "Address deleted successfully");
         } catch (Exception e) {
+            e.printStackTrace();
             return new ApiResponse(false, e.getMessage());
         }
     }
